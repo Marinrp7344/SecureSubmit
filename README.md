@@ -1,9 +1,9 @@
 RUNNING: 
 running requires python 3.12  
 spacy library  
-'''pip install spacy'''   
+```pip install spacy```
 spacypdfreader lib  
-'pip install spacypdfreader'  
+`pip install spacypdfreader`  
 pdf2image  
 'pip install pdf2image'  
 pytesseract  
