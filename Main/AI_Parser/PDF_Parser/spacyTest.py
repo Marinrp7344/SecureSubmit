@@ -6,8 +6,9 @@ import re
 nlp = spacy.load('en_core_web_sm')
 
 # read the pdf into a usable format with given packages
-doc = pdf_reader('Addresses.pdf', nlp)
-doc2 = pymupdf.open('Addresses.pdf')
+doc = pdf_reader('phoneNums.pdf', nlp)
+doc2 = pymupdf.open('phoneNums.pdf')
+#doc2 = pymupdf.open('Addresses.pdf')
 # just print out the recognized entities (address, etc)
 for ent in doc.ents:
     print(f"Entity: {ent.text}, Label: {ent.label_}")
@@ -21,11 +22,13 @@ page = doc2[0]
 def getPhoneNumberRects(page):
 
     # regex that matches phone numbers
-    pattern = re.compile(r"^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$")
+    pattern = re.compile(r"^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}.$")
 
     # get text from the page then find matches with regex
     words = page.get_text("words")  # extract words on page
+    print(words)
     matches = [w for w in words if pattern.search(w[4])]
+    print(matches)
     # list for output
     rects = []
     for value in matches:
@@ -45,6 +48,7 @@ def highlightRects(rects, color):
         annot.update()
 
 rects = getPhoneNumberRects(page)
+print(rects)
 highlightRects(rects, pymupdf.pdfcolor["red"])
 
 # save the document with these changes, apply annotations
