@@ -2,7 +2,7 @@ import spacy
 from spacypdfreader.spacypdfreader import pdf_reader
 import pymupdf
 import re
-# set up a natural language processing model
+# set up a natural language processing model #
 nlp = spacy.load('en_core_web_sm')
 
 # read the pdf into a usable format with given packages
