@@ -22,12 +22,27 @@ page = doc2[0]
 def getPhoneNumberRects(page):
 
     # regex that matches phone numbers
-    pattern = re.compile(r"^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}.$")
-
+    patternMain = re.compile(r"^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}.$")
+    patternSub1 = re.compile(r"\(\d{3}\)")
+    patternSub2 = re.compile(r"\d{3}[\s.-]?\d{4}")
     # get text from the page then find matches with regex
     words = page.get_text("words")  # extract words on page
     print(words)
-    matches = [w for w in words if pattern.search(w[4])]
+    matches = []
+    #matches = [w for w in words if pattern.search(w[4])]
+    previousword = words[0]
+    for w in words:
+
+        # catch cases 123-456-7890
+        if patternMain.search(w[4]):
+            matches.append(w)
+
+        # catch cases (123) 456-7890, where two words are basically made in one phone number
+        if (patternSub1.search(previousword[4]) and patternSub2.search(w[4])):
+            matches.append(previousword)
+            matches.append(w)
+
+        previousword = w
     print(matches)
     # list for output
     rects = []
