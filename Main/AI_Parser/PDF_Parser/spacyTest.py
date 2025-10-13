@@ -64,7 +64,7 @@ def highlightRects(rects, color):
 
 rects = getPhoneNumberRects(page)
 print(rects)
-highlightRects(rects, pymupdf.pdfcolor["red"])
+highlightRects(rects, pymupdf.pdfcolor["blue"])
 
 # save the document with these changes, apply annotations
 doc2.save("output.pdf")
