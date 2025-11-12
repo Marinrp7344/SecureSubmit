@@ -16,11 +16,12 @@ from pdfminer.layout import LTTextContainer, LTChar, LTTextLine
 # For updating the PDF
 from pikepdf import Pdf, AttachedFileSpec, Name, Dictionary, Array
 
+FILENAME = "fictional_personal_data.pdf"
 analyzer = AnalyzerEngine()
 
 analyzed_character_sets = []
 
-for page_layout in extract_pages("random_addresses.pdf"):
+for page_layout in extract_pages(FILENAME):
     for text_container in page_layout:
         if isinstance(text_container, LTTextContainer):
 
@@ -69,7 +70,7 @@ for analyzed_character_set in analyzed_character_sets:
     analyzed_bounding_boxes.append({"boundingBox": completeBoundingBox, "result": analyzed_character_set["result"]})
 
 
-pdf = Pdf.open("random_addresses.pdf")
+pdf = Pdf.open(FILENAME)
 
 annotations = []
 
