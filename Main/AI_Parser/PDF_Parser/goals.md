@@ -13,5 +13,3 @@ Password
 Date of Birth  
 Medical information  
 IP address  
-
-
