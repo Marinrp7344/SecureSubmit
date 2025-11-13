@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "vite": "^7.2.2",
+    "xml-js": "^1.6.11"
+  },
+  "name": "securesubmit",
+  "version": "1.0.0",
+  "description": "placeholder",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Marinrp7344/SecureSubmit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Marinrp7344/SecureSubmit/issues"
+  },
+  "homepage": "https://github.com/Marinrp7344/SecureSubmit#readme"
+}
