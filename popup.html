@@ -15,6 +15,7 @@
         padding: 1rem;
       }
       .dropzone {
+        position: relative; 
         border: 2px dashed var(--bs-border-color);
         border-radius: 0.75rem;
         padding: 1rem;
@@ -50,6 +51,7 @@
     <div class="d-flex gap-2 mb-2">
       <button id="uploadButton" class="btn btn-primary w-50">Process file</button>
       <button id="downloadLast" class="btn btn-outline-secondary w-50" disabled>Download last</button>
+
     </div>
 
     <div class="d-flex justify-content-between align-items-center p-2 rounded bg-body-tertiary">
@@ -61,6 +63,8 @@
 
     <!-- Load Bootstrap JS + your script at the bottom -->
     <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/exif-reader.js"></script>
+    <script src="js/piexif.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

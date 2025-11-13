@@ -1,0 +1,1 @@
+console.log("SecureSubmit content script active");
