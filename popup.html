@@ -1,74 +1,83 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Secure Submit</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Secure Submit</title>
 
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
 
+  <style>
+    body {
+      width: 360px;
+      min-height: 420px;
+      padding: 1rem;
+    }
+    .dropzone {
+      position: relative;
+      border: 2px dashed var(--bs-border-color);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+    }
+    .dropzone.drag {
+      border-color: var(--bs-primary);
+      background-color: rgba(var(--bs-primary-rgb), 0.05);
+    }
+    .status {
+      min-height: 1.25rem;
+    }
+    .server-section {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--bs-border-color);
+    }
+  </style>
+</head>
 
-    <style>
-      body {
-        width: 360px;
-        min-height: 420px;
-        padding: 1rem;
-      }
-      .dropzone {
-        position: relative; 
-        border: 2px dashed var(--bs-border-color);
-        border-radius: 0.75rem;
-        padding: 1rem;
-        text-align: center;
-      }
-      .dropzone.drag {
-        border-color: var(--bs-primary);
-        background-color: rgba(var(--bs-primary-rgb), 0.05);
-      }
-      .status {
-        min-height: 1.25rem;
-      }
-    </style>
-  </head>
+<body class="bg-body-tertiary">
+<h3 class="text-center mb-3 text-primary">Secure Submit</h3>
+<p class="text-center text-secondary small mb-3">
+  Upload a file to remove private metadata — processed locally in your browser.
+</p>
 
-  <body class="bg-body-tertiary">
-    <h3 class="text-center mb-3 text-primary">Secure Submit</h3>
-    <p class="text-center text-secondary small mb-3">
-      Upload a file to remove private metadata — processed locally in your browser.
-    </p>
+<div id="dropzone" class="dropzone mb-3">
+  <div class="mb-2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="text-primary">
+      <path d="M12 3l4 4h-3v6h-2V7H8l4-4zm-7 9h2v7h10v-7h2v9H5v-9z" />
+    </svg>
+  </div>
+  <div class="fw-semibold">Drag & drop your file here</div>
+  <div class="text-secondary small">or click to browse</div>
+  <input type="file" id="fileInput" class="position-absolute w-100 h-100 top-0 start-0 opacity-0" />
+</div>
 
-    <div id="dropzone" class="dropzone mb-3">
-      <div class="mb-2">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="text-primary">
-          <path d="M12 3l4 4h-3v6h-2V7H8l4-4zm-7 9h2v7h10v-7h2v9H5v-9z" />
-        </svg>
-      </div>
-      <div class="fw-semibold">Drag & drop your file here</div>
-      <div class="text-secondary small">or click to browse</div>
-      <input type="file" id="fileInput" class="position-absolute w-100 h-100 top-0 start-0 opacity-0" />
-    </div>
+<div class="d-flex gap-2 mb-2">
+  <button id="uploadButton" class="btn btn-primary w-50">Process file</button>
+  <button id="downloadLast" class="btn btn-outline-secondary w-50" disabled>Download last</button>
+</div>
 
-    <div class="d-flex gap-2 mb-2">
-      <button id="uploadButton" class="btn btn-primary w-50">Process file</button>
-      <button id="downloadLast" class="btn btn-outline-secondary w-50" disabled>Download last</button>
+<div class="d-flex justify-content-between align-items-center p-2 rounded bg-body-tertiary">
+  <small class="text-secondary" id="fileName">No file selected</small>
+  <span class="badge text-bg-info" id="fileSize">0 KB</span>
+</div>
 
-    </div>
+<div class="status small text-secondary mt-2" id="status">Ready.</div>
 
-    <div class="d-flex justify-content-between align-items-center p-2 rounded bg-body-tertiary">
-      <small class="text-secondary" id="fileName">No file selected</small>
-      <span class="badge text-bg-info" id="fileSize">0 KB</span>
-    </div>
+<!-- Server Communication Section -->
+<div class="server-section">
+  <button id="queryButton" class="btn btn-sm btn-outline-primary w-100 mb-2">Send Query to Server</button>
+  <div class="small text-secondary p-2 rounded bg-body" id="serverResponse">Click button to query server...</div>
+</div>
 
-    <div class="status small text-secondary mt-2" id="status">Ready.</div>
-
-    <!-- Load Bootstrap JS + your script at the bottom -->
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/pdf-lib.min.js"></script>
-    <script src="js/exif-reader.js"></script>
-    <script src="js/jszip.min.js"></script>
-    <script src="js/xml-js.min.js"></script>
-    <script src="js/xml-js.js"></script>
-    <script src="js/piexif.js"></script>
-    <script src="popup.js"></script>
-  </body>
+<!-- Load Bootstrap JS + your script at the bottom -->
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/pdf-lib.min.js"></script>
+<script src="js/exif-reader.js"></script>
+<script src="js/jszip.min.js"></script>
+<script src="js/xml-js.min.js"></script>
+<script src="js/xml-js.js"></script>
+<script src="js/piexif.js"></script>
+<script src="popup.js"></script>
+</body>
 </html>
