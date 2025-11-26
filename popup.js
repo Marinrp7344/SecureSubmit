@@ -11,35 +11,56 @@ const serverResponse = document.getElementById('serverResponse');
 let lastCleanedFile = null;
 let fileType = "";
 
+// setup in the flask app
 const SERVER_URL = 'http://localhost:5000';
 
-// Server communication functionality
+// Button to send to local server for PII processing w Presidio
 queryButton.addEventListener('click', async () => {
-    serverResponse.textContent = 'Sending query to server...';
 
-    // send a post to the local server
+    // first make sure a file is there
+    const selectedFile = fileInput.files[0];
+    if (!selectedFile){
+        serverResponse.textContent = "Please upload a file before processing";
+        return;
+    }
+
+    // temp response to let user know its working
+    serverResponse.textContent = "Processing on local server...";
+
     try {
+        // send the file as formdata to the local python server running presidio
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('fileType', selectedFile.name.split('.').pop().toLowerCase());
+
+        // so just post the file as formdata to the local server
         const response = await fetch(`${SERVER_URL}/query`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                query: 'Hello from Chrome Extension!'
-            })
+            body: formData
         });
 
-        if (!response.ok) {
+        // error check
+        if(!response.ok){
             throw new Error(`Server returned ${response.status}`);
         }
-        // get response from the server
-        const data = await response.json();
-        serverResponse.textContent = `Server says: "${data.message}"`;
-        console.log('Full response:', data);
-    } catch (error) {
+
+        const pdfBlob = await response.blob();
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        serverResponse.innerHTML = `
+            Processing complete.<br>
+            <a href="${pdfUrl}" download="highlighted_${selectedFile.name}">
+                Download highlighted PDF
+            </a>
+        `;
+
+        console.log('Received PDF blob:', pdfBlob);
+
+    } catch (error){
         console.error('Error communicating with server:', error);
-        serverResponse.textContent = `Error: ${error.message}. Make sure Python server is running on port 5000.`;
+        serverResponse.textContent = `Error: ${error.message}. Make sure to run server.py locally`;
     }
+
 });
 
 //Process the file when the user uploads it and changes the outside HTML
