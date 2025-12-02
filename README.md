@@ -1,19 +1,9 @@
-RUNNING: 
-running requires python 3.12  
-spacy library  
-`pip install spacy`  
-spacypdfreader lib  
-`pip install spacypdfreader`  
-pdf2image  
-`pip install pdf2image`  
-pytesseract  
-`pip install pytesseract`    
-  
-Overview: 
-This feature branch uses some high level python libraries and AI to parse elements of a PDF and highlight data that is potentially sensitive.  
+SecureSubmit is a chrome extension that accepts file uploads, identifies personal information in files, and removes metadata.  
+Personal information identification is handled by the Microsoft presidio library (https://microsoft.github.io/presidio/), using NLP and regex to identify PII.  
+
+To run the extension,  
+1. clone the github repo locally and load the folder into chrome as an unpacked extension.  
+2. Run server.py locally to allow for presidio PII identification  
 
 
 
-Resources used:  
-https://medium.com/globant/building-an-address-parser-with-spacy-e3376b7cff   
-https://gist.github.com/agentcooper/4c55133f5d95866acdee5017cd318558   
