@@ -1,34 +1,88 @@
-
 const fileInput = document.getElementById('fileInput');
 const fileStatus = document.getElementById('status');
 const uploadButton = document.getElementById('uploadButton');
 const fileName = document.getElementById('fileName');
 const fileSize = document.getElementById('fileSize');
-const supportedFileTypes = ['jpg','jpeg','png','pdf', 'docx', 'pptx', 'xlsx']
+const supportedFileTypes = ['jpg','jpeg','png','pdf', 'docx', 'pptx', 'xlsx'];
 const downloadButton = document.getElementById('downloadLast');
+const queryButton = document.getElementById('queryButton');
+const serverResponse = document.getElementById('serverResponse');
+
 let lastCleanedFile = null;
-let fileType = ""
+let fileType = "";
+
+// setup in the flask app
+const SERVER_URL = 'http://localhost:5000';
+
+// Button to send to local server for PII processing w Presidio
+queryButton.addEventListener('click', async () => {
+
+    // first make sure a file is there
+    const selectedFile = fileInput.files[0];
+    if (!selectedFile){
+        serverResponse.textContent = "Please upload a file before processing";
+        return;
+    }
+
+    // temp response to let user know its working
+    serverResponse.textContent = "Processing on local server...";
+
+    try {
+        // send the file as formdata to the local python server running presidio
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('fileType', selectedFile.name.split('.').pop().toLowerCase());
+
+        // so just post the file as formdata to the local server
+        const response = await fetch(`${SERVER_URL}/query`, {
+            method: 'POST',
+            body: formData
+        });
+
+        // error check
+        if(!response.ok){
+            throw new Error(`Server returned ${response.status}`);
+        }
+
+        const pdfBlob = await response.blob();
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        serverResponse.innerHTML = `
+            Processing complete.<br>
+            <a href="${pdfUrl}" download="highlighted_${selectedFile.name}">
+                Download highlighted PDF
+            </a>
+        `;
+
+        console.log('Received PDF blob:', pdfBlob);
+
+    } catch (error){
+        console.error('Error communicating with server:', error);
+        serverResponse.textContent = `Error: ${error.message}. Make sure to run server.py locally`;
+    }
+
+});
 
 //Process the file when the user uploads it and changes the outside HTML
 fileInput.addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (file) {
     //Update file name
-    fileName.textContent = file.name; 
+    fileName.textContent = file.name;
     //Update file size
-    fileSize.textContent = `${(file.size / 1024).toFixed(1)} KB`; 
+    fileSize.textContent = `${(file.size / 1024).toFixed(1)} KB`;
     fileStatus.textContent = 'Ready to process.';
   }
 });
 
 uploadButton.addEventListener('click', async () => {
   //Get the first selected file
-  const selectedFile = fileInput.files[0]; 
+  const selectedFile = fileInput.files[0];
 
   if (!selectedFile) {
       fileStatus.textContent = 'Please pick a file before processing.';
       return;
-  } 
+  }
 
   //takes out the file type in string form. EX: .jpg or .pdf
   const currentFileType = selectedFile.name.split('.').pop().toLowerCase();
@@ -40,8 +94,8 @@ uploadButton.addEventListener('click', async () => {
   else{
     fileType = currentFileType;
   }
-  
-    
+
+
   //Try to process the metadata and if it cant gives an error
   try {
     let cleanedFile;
@@ -104,13 +158,13 @@ async function removeImageMetadata(file) {
             if (blob) {
               //This new blob is the cleaned version
               resolve(blob);
-            } 
+            }
             else {
               reject('Failed to create cleaned image.');
             }
           },
           file.type, //preserve original type
-          1.0 
+          1.0
         );
       };
 
@@ -147,7 +201,7 @@ async function removeOfficeMetadata(file)
   const arrayBuffer = await file.arrayBuffer();
   const zipFile = await JSZip.loadAsync(arrayBuffer);
 
-  async function cleanXml(dir) 
+  async function cleanXml(dir)
   {
     let xmlFile = zipFile.file(dir);
     if (!xmlFile) return;
@@ -158,7 +212,7 @@ async function removeOfficeMetadata(file)
     const metadataKeys = ["cp:coreProperties", "Properties", "property", "ds:datastoreItem", "ExtendedFileProperties", "ctp:customProperties"];
     const metadataKeysToDelete = [
       "dc:creator", "cp:lastModifiedBy", "dc:title", "dc:subject", "dc:description",
-      "dcterms:created", "dcterms:modified", "cp:revision", "Company", "Manager", 
+      "dcterms:created", "dcterms:modified", "cp:revision", "Company", "Manager",
       "Application", "AppVersion"
     ];
 
@@ -179,7 +233,7 @@ async function removeOfficeMetadata(file)
       }
     }
 
-    
+
     const cleanedZip = xmljs.js2xml(xmlObjects, {compact:true});
     zipFile.file(dir, cleanedZip);
   }
