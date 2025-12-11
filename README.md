@@ -12,9 +12,11 @@ Download the latest release from github
 - Go to chrome://extensions/  
 - Ensure "Developer Mode" is On  
 - go to "Load Unpacked" and select the extracted folder for SecureSubmit  
-- Now the chrome extension is loaded  
+- Now the chrome extension is loaded and accessible in your browser  
 
 Local Python Server  
-- run `pip install -r requirements.txt`
+- Navigate to the "server" folder
+- open cmd or Powershell with shift + rightclick  "open powershell window here" 
+- run `pip install -r requirements.txt`  
 - then run `python server.py`
 - The server will run locally in the background and highlight PII in files
